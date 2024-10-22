@@ -20,6 +20,8 @@
         <!--  Actividad para mostrar las novelas favoritas  -->
         <activity android:name="com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.activity.FavoritesActivity" android:exported="false"/>
         <activity android:name="com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.activity.AddReviewActivity" android:exported="false"/>
+
+        <activity android:name="com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.activity.SettingsActivity" android:exported="false"/>
         <!--  Actividad para manejar Firebase (si se requiere para la autenticación)  -->
         <!--  Esta parte es opcional, si usas Firebase Authentication u otros servicios  -->
         <!--

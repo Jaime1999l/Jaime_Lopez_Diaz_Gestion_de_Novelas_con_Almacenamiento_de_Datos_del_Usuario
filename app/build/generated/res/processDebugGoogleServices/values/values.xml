@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gcm_defaultSenderId" translatable="false">924116075202</string>
+    <string name="google_api_key" translatable="false">AIzaSyAKKZZlCkqq26bxrZLESelfk9I1MK45bwU</string>
+    <string name="google_app_id" translatable="false">1:924116075202:android:c42b3eec99c01c0fe2f15b</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAKKZZlCkqq26bxrZLESelfk9I1MK45bwU</string>
+    <string name="google_storage_bucket" translatable="false">monitoreo-de-consumo-63ba2.appspot.com</string>
+    <string name="project_id" translatable="false">monitoreo-de-consumo-63ba2</string>
+</resources>
