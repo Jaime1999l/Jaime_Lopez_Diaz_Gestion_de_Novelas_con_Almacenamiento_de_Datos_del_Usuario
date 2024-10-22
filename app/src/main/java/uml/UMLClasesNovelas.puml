@@ -122,9 +122,17 @@ package com.example.pde_aplicacion_gestion_novelas_segundo_plano_jaime_lopez_dia
         + setNovelName(String): void
     }
 
+    class SettingsActivity {
+        - Switch switchDarkMode
+        + onCreate(Bundle): void
+        - loadThemePreference(): void
+        - setAppTheme(boolean): void
+    }
+
     PantallaPrincipalActivity --> AddEditNovelActivity
     PantallaPrincipalActivity --> FavoritesActivity
     PantallaPrincipalActivity --> ReviewActivity
+    PantallaPrincipalActivity --> SettingsActivity
     ReviewActivity --> ReviewViewModel
     AddReviewActivity --> ReviewViewModel
     FavoritesActivity --> FavoritesViewModel
