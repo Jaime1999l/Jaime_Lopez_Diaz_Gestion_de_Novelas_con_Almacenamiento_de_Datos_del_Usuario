@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "924116075202",
+    "project_id": "monitoreo-de-consumo-63ba2",
+    "storage_bucket": "monitoreo-de-consumo-63ba2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:924116075202:android:c42b3eec99c01c0fe2f15b",
+        "android_client_info": {
+          "package_name": "com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKKZZlCkqq26bxrZLESelfk9I1MK45bwU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:924116075202:android:af6c9d936d4fb754e2f15b",
+        "android_client_info": {
+          "package_name": "com.example.monitoreo_de_consumo_energtico_en_el_hogar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKKZZlCkqq26bxrZLESelfk9I1MK45bwU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:924116075202:android:00435ebfd38f00aee2f15b",
+        "android_client_info": {
+          "package_name": "com.example.pde_aplicacion_gestion_novelas_segundo_plano_jaime_lopez_diaz"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKKZZlCkqq26bxrZLESelfk9I1MK45bwU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
