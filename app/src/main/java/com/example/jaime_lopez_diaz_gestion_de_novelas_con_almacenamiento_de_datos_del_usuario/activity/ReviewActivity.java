@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.R;
 import com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.domain.Novel;
 import com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.domain.Review;
+import com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.databaseSQL.SQLiteHelper;
 import com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.ui.review.ReviewViewModel;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 public class ReviewActivity extends AppCompatActivity {
     private ReviewViewModel reviewViewModel;
     private LinearLayout reviewsLayout;
+    private SQLiteHelper sqliteHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,17 +31,26 @@ public class ReviewActivity extends AppCompatActivity {
 
         reviewsLayout = findViewById(R.id.reviews_layout);
         reviewViewModel = new ViewModelProvider(this).get(ReviewViewModel.class);
+        sqliteHelper = new SQLiteHelper(this);
 
-        // Obtener todas las reseñas
-        loadAllReviews();
+        // Obtener todas las reseñas desde Firebase y SQLite
+        loadAllReviewsFromSQLite();
+        loadAllReviewsFromFirebase();
     }
 
-    private void loadAllReviews() {
-        reviewViewModel.getAllReviews().observe(this, new Observer<List<Review>>() {
-            @Override
-            public void onChanged(List<Review> reviews) {
-                displayReviews(reviews);
+    // Cargar reseñas desde SQLite
+    private void loadAllReviewsFromSQLite() {
+        List<Review> reviewsFromSQLite = sqliteHelper.getAllReviews();
+        displayReviews(reviewsFromSQLite);
+    }
+
+    // Cargar reseñas desde Firebase y almacenarlas también en SQLite
+    private void loadAllReviewsFromFirebase() {
+        reviewViewModel.getAllReviews().observe(this, reviews -> {
+            for (Review review : reviews) {
+                sqliteHelper.addReview(review);
             }
+            displayReviews(reviews);
         });
     }
 
@@ -57,7 +68,7 @@ public class ReviewActivity extends AppCompatActivity {
             // Botón para ver más detalles de la novela
             Button viewNovelButton = new Button(this);
             viewNovelButton.setText("Ver Novela");
-            viewNovelButton.setOnClickListener(v -> loadNovelDetails(review.getNovelId())); // Cargar detalles de la novela
+            viewNovelButton.setOnClickListener(v -> loadNovelDetails(review.getNovelId()));
 
             reviewsLayout.addView(reviewView);
             reviewsLayout.addView(viewNovelButton);
@@ -86,4 +97,3 @@ public class ReviewActivity extends AppCompatActivity {
         Toast.makeText(this, "Título: " + novel.getTitle() + "\nAutor: " + novel.getAuthor(), Toast.LENGTH_LONG).show();
     }
 }
-

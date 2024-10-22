@@ -18,6 +18,7 @@ import com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_dat
 import com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.activity.FavoritesActivity;
 import com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.activity.ReviewActivity;
 import com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.domain.Novel;
+import com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.databaseSQL.SQLiteHelper;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -35,6 +36,7 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
     private LinearLayout novelsLayout;
     private List<Novel> novelList;
     private ExecutorService executorService;
+    private SQLiteHelper sqliteHelper;  // Nueva instancia para SQLite
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         novelsLayout = findViewById(R.id.novels_layout);
         novelList = new ArrayList<>();
+        sqliteHelper = new SQLiteHelper(this);  // Inicializamos SQLiteHelper
 
         ImageView imageView = findViewById(R.id.home_image);
         imageView.setImageResource(R.drawable.libros);
@@ -56,7 +59,7 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
 
         executorService = Executors.newSingleThreadExecutor();
 
-        loadNovels();
+        loadNovelsFromSQLite(); // Cargamos novelas desde SQLite primero
 
         // Tarea de actualización en segundo plano
         executorService.execute(this::startPolling);
@@ -93,6 +96,14 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
         });
     }
 
+    private void loadNovelsFromSQLite() {
+        // Cargar novelas desde SQLite y mostrarlas
+        List<Novel> novelsFromSQLite = sqliteHelper.getAllNovels();
+        if (novelsFromSQLite != null && !novelsFromSQLite.isEmpty()) {
+            updateNovelList(novelsFromSQLite);
+        }
+    }
+
     private void loadNovels() {
         db.collection("novelas").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -101,6 +112,9 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
                     Novel novel = document.toObject(Novel.class);
                     novel.setId(document.getId());  // Obtener el ID del documento
                     newNovels.add(novel);
+
+                    // Guardamos la novela también en SQLite
+                    sqliteHelper.addNovel(novel);
                 }
 
                 updateNovelList(newNovels);
@@ -134,6 +148,9 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     Log.e("Firebase", "Error al actualizar el estado de favorito", e);
                 });
+
+        // Actualizamos el estado de favorito también en SQLite
+        sqliteHelper.updateFavoriteStatus(novel.getId(), novel.isFavorite());
     }
 
     @SuppressLint("SetTextI18n")
@@ -198,4 +215,3 @@ public class PantallaPrincipalActivity extends AppCompatActivity {
         }
     }
 }
-

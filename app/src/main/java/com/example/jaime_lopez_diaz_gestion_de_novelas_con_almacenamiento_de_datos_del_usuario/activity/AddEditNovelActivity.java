@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.R;
 import com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.domain.Novel;
+import com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.databaseSQL.SQLiteHelper;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.UUID;
@@ -25,6 +26,7 @@ public class AddEditNovelActivity extends AppCompatActivity {
     private ImageView imageViewCover;
     private Uri selectedImageUri;
     private FirebaseFirestore db;
+    private SQLiteHelper sqliteHelper;
     private String novelId;
 
     private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
@@ -43,6 +45,7 @@ public class AddEditNovelActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_edit_novel);
 
         db = FirebaseFirestore.getInstance();
+        sqliteHelper = new SQLiteHelper(this);  // Inicializamos SQLiteHelper
 
         editTextTitle = findViewById(R.id.edit_text_title);
         editTextAuthor = findViewById(R.id.edit_text_author);
@@ -54,7 +57,7 @@ public class AddEditNovelActivity extends AppCompatActivity {
 
         if (getIntent().hasExtra("EXTRA_ID")) {
             novelId = String.valueOf(getIntent().getIntExtra("EXTRA_ID", -1));
-            loadNovelDetails(Integer.parseInt(novelId));
+            loadNovelDetails(novelId);
         }
 
         buttonSelectImage.setOnClickListener(v -> openGallery());
@@ -88,6 +91,7 @@ public class AddEditNovelActivity extends AppCompatActivity {
             db.collection("novelas").document(novelId).set(novel)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(AddEditNovelActivity.this, "Novela actualizada", Toast.LENGTH_SHORT).show();
+                        sqliteHelper.updateNovel(novel);  // Actualizamos en SQLite
                         finish();
                     })
                     .addOnFailureListener(e -> {
@@ -99,6 +103,7 @@ public class AddEditNovelActivity extends AppCompatActivity {
             db.collection("novelas").document(randomId).set(novel)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(AddEditNovelActivity.this, "Novela agregada", Toast.LENGTH_SHORT).show();
+                        sqliteHelper.addNovel(novel);
                         finish();
                     })
                     .addOnFailureListener(e -> {
@@ -107,8 +112,8 @@ public class AddEditNovelActivity extends AppCompatActivity {
         }
     }
 
-    private void loadNovelDetails(int novelId) {
-        db.collection("novelas").document(String.valueOf(novelId)).get()
+    private void loadNovelDetails(String novelId) {
+        db.collection("novelas").document(novelId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     Novel novel = documentSnapshot.toObject(Novel.class);
                     if (novel != null) {
@@ -124,5 +129,3 @@ public class AddEditNovelActivity extends AppCompatActivity {
                 });
     }
 }
-
-

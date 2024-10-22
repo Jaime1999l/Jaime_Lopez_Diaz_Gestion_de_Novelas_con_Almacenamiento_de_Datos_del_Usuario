@@ -10,12 +10,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.R;
 import com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.domain.Review;
+import com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.databaseSQL.SQLiteHelper;
 import com.example.jaime_lopez_diaz_gestion_de_novelas_con_almacenamiento_de_datos_del_usuario.ui.review.ReviewViewModel;
 
 public class AddReviewActivity extends AppCompatActivity {
     private EditText editTextReviewer, editTextComment, editTextRating;
     private Button buttonAddReview;
     private ReviewViewModel reviewViewModel;
+    private SQLiteHelper sqliteHelper;
     private String novelId;
     private String novelName;
 
@@ -33,6 +35,7 @@ public class AddReviewActivity extends AppCompatActivity {
         buttonAddReview = findViewById(R.id.button_add_review);
 
         reviewViewModel = new ViewModelProvider(this).get(ReviewViewModel.class);
+        sqliteHelper = new SQLiteHelper(this);
 
         buttonAddReview.setOnClickListener(v -> addReview());
     }
@@ -50,7 +53,12 @@ public class AddReviewActivity extends AppCompatActivity {
         int rating = Integer.parseInt(ratingStr);
         Review review = new Review(novelId, reviewer, comment, rating, novelName);
 
+        // Guardar reseña en Firebase
         reviewViewModel.addReview(review);
+
+        // Guardar reseña en SQLite
+        sqliteHelper.addReview(review);
+
         Toast.makeText(this, "Reseña añadida", Toast.LENGTH_SHORT).show();
         finish();
     }
